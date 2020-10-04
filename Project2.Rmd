@@ -1,0 +1,102 @@
+---
+title: "Project 2"
+author: "Dominika Markowska-Desvallons"
+date: "10/3/2020"
+output: html_document
+---
+## DATA SET ONE
+```{r setup, include=FALSE}
+library(tidyverse)
+library(RCurl)
+library(dplyr)
+library(reshape)
+library(dummies)
+
+```
+
+
+```{r}
+
+df <-getURL("https://raw.githubusercontent.com/hrensimin05/Project2-/main/Dataset.csv")
+
+salary <- read.csv(text=df)
+head(salary)
+```
+
+```{r}
+ #column headers are values, so we need to turn the variables in the columns into rows
+
+df<-melt(salary, id.vars = c("religion"))
+
+head(df)
+```
+```{r}
+#renaming columns
+names(df)[names(df) == "variable"] <- "income"
+names(df)[names(df) == "value"] <- "frequency"
+
+#alphabetical order by religion
+df <- df[order(df$religion),]
+head(df)
+# dataset is easy to read now
+```
+
+### DATA SET TWO
+```{r}
+df2 <-getURL("https://raw.githubusercontent.com/hrensimin05/Project2-/main/500_Person_Gender_Height_Weight_Index.csv")
+
+health <- read.csv(text=df2)
+head(health)
+
+
+
+
+```
+
+```{r}
+
+df7<-melt(health, id.vars = c("Gender"), measure.vars = c("Height","Weight"))
+head(df7)
+```
+```{r}
+df0<-df7[
+  with(df7, order(df7$Gender, df7$value)),
+]
+head(df0)
+```
+```{r}
+
+plot<- ggplot(df7, aes(x = Gender, y = value)) +
+        geom_point(alpha = .3, color= "blue")
+        
+plot
+```
+### DATA SET 3 
+
+```{r}
+data <-getURL("https://raw.githubusercontent.com/hrensimin05/Project2-/main/earth.csv")
+
+earth <- read.csv(text=data)
+earth
+
+```
+```{r}
+earth_melt <- melt(earth, id.vars = c("month", "day"))
+head(earth_melt)
+```
+```{r}
+
+
+names(earth_melt)[names(earth_melt) == "variable"] <- "climate_variable"
+names(earth_melt)[names(earth_melt) == "value"] <- "climate_value"
+head(earth_melt)
+```
+
+```{r}
+plot_air<- ggplot(earth_melt, aes(x = day, y = climate_value)) +
+        geom_point()
+plot_air
+
+```
+
+
